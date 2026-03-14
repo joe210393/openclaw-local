@@ -1,11 +1,25 @@
 ---
 name: gog-batch-calendar
-description: Batch add Google Calendar events using the real batch_add_calendar.py script with authenticated gog CLI.
+description: MUST use this skill for batch calendar creation requests with 2 or more events, especially when the user says 「請批次新增以下行事曆」 or gives multiple date/time lines. Do not use normal gog skill for those cases.
 ---
 
 # gog-batch-calendar
 
-這個 skill 只能用於「一次多筆」Google 行事曆新增。
+當使用者要「一次新增 2 筆以上 Google 行事曆事件」時，必須優先使用這個 skill。
+
+## 這個 skill 何時必用
+
+符合以下任一情況，就要直接使用本 skill：
+
+- 使用者說「請批次新增以下行事曆」
+- 使用者一次提供兩筆以上事件
+- 使用者用多行方式列出日期與標題
+- 使用者說「再來」「下一筆」並明顯是在同一次批次新增
+- 同一則訊息中包含多個日期 / 多個時間 / 多個標題
+
+## 這個 skill 何時不要用
+
+只有單筆新增時，才可改用一般 `gog` skill。
 
 ## 目的
 
@@ -20,7 +34,8 @@ description: Batch add Google Calendar events using the real batch_add_calendar.
 - 不可說你沒有權限
 - 不可要求使用者另外提供 execution permission
 - 這個 skill 的設計目的就是直接呼叫真實腳本
-- 多筆新增時，優先使用這個 skill，不要改用其他 skill
+- 多筆新增時，必須優先使用這個 skill，不可改用一般 gog skill
+- 不可把批次新增拆成多次單筆新增策略
 - 不可輸出 tool_request
 - 不可輸出 Google Calendar 網址
 - 不可把準備新增說成已成功新增
