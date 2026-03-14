@@ -1,4 +1,4 @@
 {
   "name": "gog-batch-calendar",
-  "description": "Batch add Google Calendar events using the real batch_add_calendar.py script with authenticated gog CLI."
+  "description": "MUST use this skill for any Google Calendar event creation request, including single-event and batch-event creation. Do not use normal gog skill for event creation. Use normal gog only for querying/listing/reading existing calendar events."
 }
