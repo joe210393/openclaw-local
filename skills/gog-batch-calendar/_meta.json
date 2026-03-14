@@ -1,0 +1,4 @@
+{
+  "name": "gog-batch-calendar",
+  "description": "Batch add Google Calendar events using the real batch_add_calendar.py script with authenticated gog CLI."
+}
