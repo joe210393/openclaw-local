@@ -34,6 +34,12 @@ description: MUST use this skill for any Google Calendar event creation request,
 - 不可說你沒有 shell session
 - 不可說你沒有權限
 - 不可要求使用者另外提供 execution permission
+- 不可嘗試執行 `openclaw skills/gog-batch-calendar run`
+- 不可嘗試執行 `openclaw skills/gog-batch-calendar/run`
+- 不可假設存在 skill 的 `run` 可執行檔
+- 不可先嘗試任何 skill 啟動指令再回退
+- 命中本 skill 後，唯一正確做法就是直接執行：
+  `python3 /Users/hung-weichen/openclaw-local/.home/.openclaw/workspace/skills/gog-batch-calendar/scripts/batch_add_calendar.py "<多行純文字內容>"`
 - 這個 skill 的設計目的就是直接呼叫真實腳本
 - 只要是新增事件，不論單筆或多筆，必須優先使用這個 skill，不可改用一般 gog skill
 - 不可把批次新增拆成多次單筆新增策略
@@ -96,7 +102,13 @@ description: MUST use this skill for any Google Calendar event creation request,
 2. 補齊完整 `from` / `to`
 3. 組成多行純文字
 4. 呼叫上面的真實腳本
-5. 嚴格根據腳本輸出回覆
+5. 若 `exec` 直接完成，嚴格根據腳本輸出回覆
+6. 若 `exec` 回傳 `Command still running (session XXX, pid NNN)`：
+   - 必須擷取該 `sessionId`
+   - 下一步必須呼叫 `process poll`，且一定要帶上 `sessionId`
+   - 可重複 poll，直到拿到 completed / exit code
+   - 在最終結果出來前，不可輸出任何過場訊息
+7. 若 `process poll` 缺少 `sessionId` 而失敗，視為操作錯誤，不可改成安撫文字，必須繼續用正確 `sessionId` 重試
 
 ## 回覆格式
 
@@ -110,11 +122,10 @@ description: MUST use this skill for any Google Calendar event creation request,
 
 ## 批次回覆規則
 
-- 逐筆列出結果
-- 不可省略失敗項
-- 不可把失敗項包裝成成功
-- 若全部成功，也要逐筆列出
-- 不可額外加上「我無法執行」「請提供權限」「請提供 shell session」這類文字
+- 不可先輸出任何過場訊息或安撫訊息
+- 不可輸出「請稍等」「正在處理」「我正在處理批次新增」這類文字
+- 必須等待真實腳本結果完成後，才能回覆最終結果
+- 若成功，就只輸出逐筆成功/失敗結果
 
 ## 重要
 
